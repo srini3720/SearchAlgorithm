@@ -36,8 +36,12 @@ func main() {
 	fmt.Println("Connected to MySQL")
 
 	// var questionsuggestion = getAllQuestion(db);
-	var keyword = "zero"
-	var questionsuggestion = getQuestionByKeyword(db,keyword);
+	var keyword = "vector"
+	var categoryID = 1
+	var topicID = 1
+	var subcategoryID = 1
+	var subjectID = 1
+	var questionsuggestion = getQuestionByKeyword(db,keyword,categoryID,topicID,subcategoryID,subjectID);
 	fmt.Println("questionsuggestion",questionsuggestion)
 
 
@@ -67,9 +71,10 @@ func getAllQuestion(db *sql.DB) (suggestion []question) {
 	
 }
 
-func getQuestionByKeyword(db *sql.DB,Keyword string) (suggestion []question) {
+func getQuestionByKeyword(db *sql.DB,Keyword string, categoryID int,topicID int,subcategoryID int,subjectID int) (suggestion []question) {
 	// select
-	results, err := db.Query("SELECT ID,question_name,category_id,topic_id,subject_id,subcategory_id FROM esdb.question  where question_name like ?","%"+Keyword+"%" )
+	// results, err := db.Query("SELECT ID,question_name,category_id,topic_id,subject_id,subcategory_id FROM esdb.question  where question_name like ?","%"+Keyword+"%" )
+	results, err := db.Query("SELECT ID,question_name,category_id,topic_id,subject_id,subcategory_id FROM esdb.question  where MATCH(question_name) AGAINST('vector') and (category_id=? OR topic_id=? OR subject_id=? OR subcategory_id=?)",categoryID,topicID,subjectID,subcategoryID)
 	// defer results.Close()
 	if err != nil {
 		panic(err.Error())
