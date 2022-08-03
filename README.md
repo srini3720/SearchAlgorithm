@@ -36,3 +36,35 @@
 
     +----+-----------------+--------+--------+--------+--------+
     14 rows in set (0.0013 sec)
+
+4.Multiple Tables Search
+
+    SELECT  
+      question.question_name,
+      question.ID,
+      question.subcategory_id,
+      question.category_id,
+      question.subject_id,
+      question.topic_id,
+      subjects.subject_name,
+      topic.topic_name,
+      subcategory.subcategory_name,
+      category.category_name
+    FROM question 
+      LEFT JOIN subcategory ON question.subcategory_id = subcategory.ID 
+      LEFT JOIN category ON question.category_id = category.ID 
+      LEFT JOIN topic ON question.topic_id = topic.ID 
+      LEFT JOIN subjects ON question.subcategory_id = subjects.ID 
+    WHERE 
+      MATCH(question.question_name) AGAINST('vector')
+      OR (MATCH(subcategory.subcategory_name) AGAINST('vector')   OR subcategory.ID =1 )
+      OR (MATCH(category.category_name) AGAINST('vector')   OR category.ID =1)
+      OR (MATCH(subjects.subject_name) AGAINST('vector')   OR subjects.ID = 1)
+      OR (MATCH(topic.topic_name) AGAINST('vector')  OR topic.ID =1);
+
+
+
+ 
+    +----+-----------------+--------+--------+--------+--------+
+       morethat 10 lakhs rows in set (73 sec sec)
+    
