@@ -37,7 +37,7 @@
     +----+-----------------+--------+--------+--------+--------+
     14 rows in set (0.0013 sec)
 
-4.Multiple Tables Search
+5.Multiple Tables Search  (Join)
 
     SELECT  
       question.question_name,
@@ -66,5 +66,20 @@
 
  
     +----+-----------------+--------+--------+--------+--------+
-       morethat 10 lakhs rows in set (73 sec sec)
+       morethat 10 lakhs rows in set (73 sec)
     
+5.Multiple Tables Search  (Priority)
+
+                (SELECT '1' as priority,ID,question_name as suggestion FROM question WHERE MATCH(question_name) AGAINST('vector'))
+      UNION ALL (SELECT '2' as priority,ID,subject_name as suggestion FROM subjects WHERE  (MATCH(subject_name AGAINST('vector')) )
+
+      UNION ALL (SELECT '3' as priority,ID,topic_name as suggestion FROM topic WHERE   (MATCH(topic_name) AGAINST('vector')) )
+
+      UNION ALL (SELECT '4' as priority,ID,category_name as suggestion FROM category WHERE  (MATCH(category_name) AGAINST('vector')) )
+
+      UNION ALL (SELECT '5' as priority,ID,subcategory_name as suggestion FROM subcategory WHERE   (MATCH(subcategory_name) AGAINST('vector')) )
+
+      ORDER BY priority 
+
+    +----+-----------------+--------+--------+--------+--------+
+       111 rows in set (0.05 sec)
